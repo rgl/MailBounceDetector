@@ -1,0 +1,6 @@
+*.user
+*.nupkg
+bin
+obj
+.vs
+packages
