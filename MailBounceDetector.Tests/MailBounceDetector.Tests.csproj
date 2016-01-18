@@ -64,6 +64,8 @@
     <EmbeddedResource Include="Fixtures\bounce_exchange_non_existing_mailbox.eml" />
     <EmbeddedResource Include="Fixtures\bounce_postfix_non_existing_mailbox.eml" />
     <EmbeddedResource Include="Fixtures\non_bounce_postfix_hello_world.eml" />
+    <EmbeddedResource Include="Fixtures\bounce_qmail_multipart_alternative_non_existing_mailbox.eml" />
+    <EmbeddedResource Include="Fixtures\bounce_qmail_no_host_found.eml" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

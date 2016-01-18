@@ -71,6 +71,60 @@ namespace MailBounceDetector.Tests
             Assert.Equal("failed", result.Action);
         }
 
+        [Fact]
+        public void QmailNoHostFound()
+        {
+            var message = MimeMessage.Load(OpenFixture("bounce_qmail_no_host_found.eml"));
+
+            var result = BounceDetector.Detect(message);
+
+            Assert.True(result.IsBounce);
+            Assert.True(result.IsHard);
+            Assert.False(result.IsSoft);
+            Assert.Equal("5 Permanent Failure", result.PrimaryStatus.ToString());
+            Assert.Equal("3 Mail System Status", result.SecundaryStatus.ToString());
+            Assert.Equal("30 Other or undefined mail system status", result.CombinedStatus.ToString());
+            Assert.Null(result.RemoteMta);
+            Assert.Equal("silverton.berkeley.edu", result.ReportingMta);
+            Assert.Equal("god@heaven.af.mil", result.FinalRecipient);
+            Assert.Equal("<19960317035438.316.qmail@silverton.berkeley.edu>", result.UndeliveredMessageId);
+            Assert.IsType<TextPart>(result.DeliveryNotificationPart);
+            Assert.NotNull(result.DeliveryStatus);
+            Assert.IsType<MessagePart>(result.UndeliveredMessagePart);
+            Assert.NotNull(result.DiagnosticCodes);
+            Assert.Equal(2, result.DiagnosticCodes.Length);
+            Assert.Equal("", result.DiagnosticCodes[0]);
+            Assert.Equal("Sorry, I couldn't find any host by that name.", result.DiagnosticCodes[1]);
+            Assert.Equal("failed", result.Action);
+        }
+
+        [Fact]
+        public void QmailWrappedInMultipartAlternateNonExistingMailbox()
+        {
+            var message = MimeMessage.Load(OpenFixture("bounce_qmail_multipart_alternative_non_existing_mailbox.eml"));
+
+            var result = BounceDetector.Detect(message);
+
+            Assert.True(result.IsBounce);
+            Assert.True(result.IsHard);
+            Assert.False(result.IsSoft);
+            Assert.Equal("5 Permanent Failure", result.PrimaryStatus.ToString());
+            Assert.Equal("7 Security or Policy Status", result.SecundaryStatus.ToString());
+            Assert.Equal("71 Delivery not authorized, message refused", result.CombinedStatus.ToString());
+            Assert.Null(result.RemoteMta);
+            Assert.Equal("mgm-smtp.example.com", result.ReportingMta);
+            Assert.Equal("notFound@example.com", result.FinalRecipient);
+            Assert.Null(result.UndeliveredMessageId);
+            Assert.IsType<TextPart>(result.DeliveryNotificationPart);
+            Assert.NotNull(result.DeliveryStatus);
+            Assert.IsType<MessagePart>(result.UndeliveredMessagePart);
+            Assert.NotNull(result.DiagnosticCodes);
+            Assert.Equal(2, result.DiagnosticCodes.Length);
+            Assert.Equal("4.3.2.1", result.DiagnosticCodes[0]);
+            Assert.Equal("does not like recipient. Remote host said: 554 5.7.1 <notFound@example.com>: Relay access denied Giving up on 4.3.2.1.", result.DiagnosticCodes[1]);
+            Assert.Equal("failed", result.Action);
+        }
+
         private Stream OpenFixture(string name)
         {
             var type = GetType();

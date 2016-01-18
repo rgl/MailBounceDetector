@@ -42,6 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BounceDetector.cs" />
+    <Compile Include="QmailBounceDetector.cs" />
+    <Compile Include="StandardBounceDetector.cs" />
     <Compile Include="BounceDetectResult.cs" />
     <Compile Include="BounceStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
