@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/rgl/MailBounceDetector</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
+    <releaseNotes>Add support for detecting qmail bounces.</releaseNotes>
     <copyright>Copyright 2015 ruilopes.com</copyright>
     <tags>MailKit Bounce</tags>
   </metadata>
