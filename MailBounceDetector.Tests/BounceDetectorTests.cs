@@ -99,6 +99,44 @@ namespace MailBounceDetector.Tests
         }
 
         [Fact]
+        public void QmailExtraLinesBetweenRecipientParagraphs()
+        {
+            var message = MimeMessage.Load(OpenFixture("bounce_qmail_extra_lines_between_recipient_paragraphs.eml"));
+
+            var result = BounceDetector.Detect(message);
+
+            Assert.True(result.IsBounce);
+            Assert.True(result.IsHard);
+            Assert.False(result.IsSoft);
+            Assert.Equal("5 Permanent Failure", result.PrimaryStatus.ToString());
+            Assert.Equal("3 Mail System Status", result.SecundaryStatus.ToString());
+            Assert.Equal("30 Other or undefined mail system status", result.CombinedStatus.ToString());
+            Assert.Null(result.RemoteMta);
+            Assert.Equal("example.com", result.ReportingMta);
+            // NB even though there are multiple failure paragraphs, only the last one is returned here.
+            Assert.Equal("bob@example.com", result.FinalRecipient);
+            Assert.Equal("<20160117020038.316.qmail@example.com>", result.UndeliveredMessageId);
+            Assert.IsType<TextPart>(result.DeliveryNotificationPart);
+            Assert.NotNull(result.DeliveryStatus);
+            Assert.Equal(3, result.DeliveryStatus.StatusGroups.Count);
+            Assert.Equal("dns;example.com", result.DeliveryStatus.StatusGroups[0]["Reporting-MTA"]);
+            Assert.Equal("rfc822;alice@example.com", result.DeliveryStatus.StatusGroups[1]["Final-Recipient"]);
+            Assert.Equal("rfc822;bob@example.com", result.DeliveryStatus.StatusGroups[2]["Final-Recipient"]);
+            Assert.IsType<MessagePart>(result.UndeliveredMessagePart);
+            var undeliveredMessage = ((MessagePart)result.UndeliveredMessagePart).Message;
+            Assert.Equal("are you there?", undeliveredMessage.Subject);
+            Assert.Equal("Just checking.", undeliveredMessage.TextBody);
+            Assert.Equal(2, undeliveredMessage.To.Count);
+            Assert.Equal("alice@example.com", undeliveredMessage.To[0].ToString());
+            Assert.Equal("bob@example.com", undeliveredMessage.To[1].ToString());
+            Assert.NotNull(result.DiagnosticCodes);
+            Assert.Equal(2, result.DiagnosticCodes.Length);
+            Assert.Equal("", result.DiagnosticCodes[0]);
+            Assert.Equal("Sorry, I couldn't find any host by that name.", result.DiagnosticCodes[1]);
+            Assert.Equal("failed", result.Action);
+        }
+
+        [Fact]
         public void QmailWrappedInMultipartAlternateNonExistingMailbox()
         {
             var message = MimeMessage.Load(OpenFixture("bounce_qmail_multipart_alternative_non_existing_mailbox.eml"));

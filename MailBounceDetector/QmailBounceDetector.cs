@@ -47,7 +47,7 @@ namespace MailBounceDetector
         // e.g. Hi. This is the qmail-send program at mgm-smtp.example.com.
         private static readonly Regex QmailBounceRegex = new Regex(@"^Hi. This is the .+ (.+)\.\r?\n", RegexOptions.Compiled);
         private static readonly Regex LinesRegex = new Regex(@"\r?\n", RegexOptions.Compiled);
-        private static readonly Regex ParagraphRegex = new Regex(@"\r?\n\r?\n", RegexOptions.Compiled);
+        private static readonly Regex ParagraphRegex = new Regex(@"(?:\r?\n){2,}", RegexOptions.Compiled);
         private static readonly Regex BreakParagraphRegex = new Regex(@"\r?\n-.+?\r?\n\r?\n", RegexOptions.Compiled);
         private static readonly Regex FailureParagraphRegex = new Regex(@"^<(.+?)>:\r?\n(.+)", RegexOptions.Compiled | RegexOptions.Singleline);
         // e.g.: Remote host said: 554 5.7.1 <notFound@example.com>: Relay access denied
