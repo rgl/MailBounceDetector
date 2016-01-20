@@ -193,7 +193,7 @@ namespace MailBounceDetector
             if (_undeliveredMessagePart != null)
             {
                 var undeliveredMessage = ((MessagePart)_undeliveredMessagePart).Message;
-                _undeliveredMessageId = undeliveredMessage.Headers["Message-Id"];
+                _undeliveredMessageId = undeliveredMessage.MessageId;
             }
             // try harder. Exchange has In-Reply-To right on the root message. its the undelivered message id.
             else

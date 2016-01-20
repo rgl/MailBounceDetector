@@ -36,7 +36,7 @@ namespace MailBounceDetector.Tests
             Assert.Equal("mx.google.com", result.RemoteMta);
             Assert.Equal("test.local", result.ReportingMta);
             Assert.Equal("email_that_does_not_exists_this_is_just_a_test@gmail.com", result.FinalRecipient);
-            Assert.Equal("<560418D8.2010303@example.com>", result.UndeliveredMessageId);
+            Assert.Equal("560418D8.2010303@example.com", result.UndeliveredMessageId);
             Assert.IsType<TextPart>(result.DeliveryNotificationPart);
             Assert.NotNull(result.DeliveryStatus);
             Assert.IsType<MessagePart>(result.UndeliveredMessagePart);
@@ -60,7 +60,7 @@ namespace MailBounceDetector.Tests
             Assert.Null(result.RemoteMta);
             Assert.Equal("test.local", result.ReportingMta);
             Assert.Equal("email_that_does_not_exists_this_is_just_a_test@test.local", result.FinalRecipient);
-            Assert.Equal("<20150925104956.BD73C158@test.local>", result.UndeliveredMessageId);
+            Assert.Equal("20150925104956.BD73C158@test.local", result.UndeliveredMessageId);
             Assert.IsType<TextPart>(result.DeliveryNotificationPart);
             Assert.NotNull(result.DeliveryStatus);
             Assert.IsType<MessagePart>(result.UndeliveredMessagePart);
@@ -87,7 +87,7 @@ namespace MailBounceDetector.Tests
             Assert.Null(result.RemoteMta);
             Assert.Equal("silverton.berkeley.edu", result.ReportingMta);
             Assert.Equal("god@heaven.af.mil", result.FinalRecipient);
-            Assert.Equal("<19960317035438.316.qmail@silverton.berkeley.edu>", result.UndeliveredMessageId);
+            Assert.Equal("19960317035438.316.qmail@silverton.berkeley.edu", result.UndeliveredMessageId);
             Assert.IsType<TextPart>(result.DeliveryNotificationPart);
             Assert.NotNull(result.DeliveryStatus);
             Assert.IsType<MessagePart>(result.UndeliveredMessagePart);
@@ -115,7 +115,7 @@ namespace MailBounceDetector.Tests
             Assert.Equal("example.com", result.ReportingMta);
             // NB even though there are multiple failure paragraphs, only the last one is returned here.
             Assert.Equal("bob@example.com", result.FinalRecipient);
-            Assert.Equal("<20160117020038.316.qmail@example.com>", result.UndeliveredMessageId);
+            Assert.Equal("20160117020038.316.qmail@example.com", result.UndeliveredMessageId);
             Assert.IsType<TextPart>(result.DeliveryNotificationPart);
             Assert.NotNull(result.DeliveryStatus);
             Assert.Equal(3, result.DeliveryStatus.StatusGroups.Count);
