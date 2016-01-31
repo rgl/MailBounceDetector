@@ -1,4 +1,6 @@
-﻿this library detects whether a message is a [bounce message](https://en.wikipedia.org/wiki/Bounce_message).
+[![Build status](https://ci.appveyor.com/api/projects/status/wafi6tvw52r3r992?svg=true)](https://ci.appveyor.com/project/rgl/mailbouncedetector)
+
+this library detects whether a message is a [bounce message](https://en.wikipedia.org/wiki/Bounce_message).
 
 this detects [standard](#standard-bounce-messages) and [qmail](#qmail-bounce-messages) bounce messages.
 
