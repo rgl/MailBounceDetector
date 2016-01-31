@@ -21,7 +21,7 @@ pack-publish: $(PKG)
 
 $(BIN): *.cs
 	nuget restore -SolutionDirectory ..
-	$(XBUILD) //p:Configuration=Release
+	$(XBUILD) -p:Configuration=Release
 
 clean:
 	rm -rf bin obj $(PKG)
