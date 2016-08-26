@@ -160,8 +160,7 @@ Task("Copy-Files")
     .IsDependentOn("Run-Unit-Tests")
     .Does(() =>
 {
-    CopyFileToDirectory(buildDir + "/dnx451/MailBounceDetector.dll", binDir);
-    CopyFileToDirectory(buildDir + "/dnx451/MailBounceDetector.pdb", binDir);
+    CopyDirectory(buildDir, binDir);
 
     CopyFiles(new FilePath[] { "README.md", "ReleaseNotes.md" }, binDir);
 });

@@ -1,16 +1,25 @@
 <?xml version="1.0"?>
 <package >
-  <metadata>
-    <id>MailBounceDetector</id>
-    <title>MailBounceDetector</title>
-    <authors>Rui Lopes</authors>
-    <owners>Rui Lopes</owners>
-    <licenseUrl>https://opensource.org/licenses/MIT</licenseUrl>
-    <projectUrl>https://github.com/rgl/MailBounceDetector</projectUrl>
-    <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Detects whether a MailKit email Message is a bounce message</description>
-    <releaseNotes>Add support for detecting qmail bounces.</releaseNotes>
-    <copyright>Copyright 2015 ruilopes.com</copyright>
-    <tags>MailKit Bounce</tags>
-  </metadata>
+    <metadata>
+        <id>MailBounceDetector</id>
+        <title>MailBounceDetector</title>
+        <authors>Rui Lopes</authors>
+        <owners>Rui Lopes</owners>
+        <licenseUrl>https://opensource.org/licenses/MIT</licenseUrl>
+        <projectUrl>https://github.com/rgl/MailBounceDetector</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Detects whether a MailKit email Message is a bounce message</description>
+        <releaseNotes>Add support for detecting qmail bounces.</releaseNotes>
+        <copyright>Copyright 2015 ruilopes.com</copyright>
+        <tags>MailKit Bounce</tags>
+    </metadata>
+
+    <files>
+        <file src="dnx451/MailBounceDetector.dll" target="lib/dnx451" />
+        <file src="dnx451/MailBounceDetector.pdb" target="lib/dnx451" />
+
+        <file src="netcoreapp1.0/MailBounceDetector.dll" target="lib/netcoreapp1.0" />
+        <file src="netcoreapp1.0/MailBounceDetector.pdb" target="lib/netcoreapp1.0" />
+        <file src="netcoreapp1.0/MailBounceDetector.deps.json" target="lib/netcoreapp1.0" />
+    </files>
 </package>
