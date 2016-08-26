@@ -1,0 +1,7 @@
+{
+    "projects":
+    [
+        "MailBounceDetector",
+        "MailBounceDetector.Tests"
+    ]
+}
