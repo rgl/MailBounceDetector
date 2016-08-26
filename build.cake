@@ -144,12 +144,6 @@ Task("Run-Unit-Tests")
     .IsDependentOn("Build")
     .Does(() =>
 {
-    XUnit2("./src/**/bin/" + configuration + "/*.Tests.dll", new XUnit2Settings
-    {
-        OutputDirectory = testResultsDir,
-        XmlReportV1 = true
-    });
-
     DotNetCoreTest("./src/MailBounceDetector.Tests", new DotNetCoreTestSettings());
 });
 
@@ -165,7 +159,8 @@ Task("Copy-Files")
     .IsDependentOn("Run-Unit-Tests")
     .Does(() =>
 {
-    CopyFiles(buildDir, binDir);
+    CopyFileToDirectory(buildDir + "/dnx451/MailBounceDetector.dll", binDir);
+    CopyFileToDirectory(buildDir + "/dnx451/MailBounceDetector.pdb", binDir);
 
     CopyFiles(new FilePath[] { "README.md", "ReleaseNotes.md" }, binDir);
 });
@@ -247,45 +242,6 @@ Task("Upload-AppVeyor-Artifacts")
 
 
 
-///////////////////////////////////////////////////////////////////////////////
-// MESSAGE
-///////////////////////////////////////////////////////////////////////////////
-
-Task("Slack")
-	.WithCriteria(() => !isPullRequest)
-    .Does(() =>
-{
-    // Resolve the API key.
-    var token = EnvironmentVariable("SLACK_TOKEN");
-
-    if(string.IsNullOrEmpty(token))
-    {
-        throw new InvalidOperationException("Could not resolve Slack token.");
-    }
-
-
-
-    // Post Message
-    var text = "Published " + appName + " v" + version;
-
-    var result = Slack.Chat.PostMessage(token, "#code", text);
-
-    if (result.Ok)
-    {
-        //Posted
-        Information("Message was succcessfully sent to Slack.");
-    }
-    else
-    {
-        //Error
-        Error("Failed to send message to Slack: {0}", result.Error);
-    }
-});
-
-
-
-
-
 //////////////////////////////////////////////////////////////////////
 // TASK TARGETS
 //////////////////////////////////////////////////////////////////////
@@ -300,8 +256,7 @@ Task("Publish")
 Task("AppVeyor")
     .IsDependentOn("Publish")
     .IsDependentOn("Update-AppVeyor-Build-Number")
-    .IsDependentOn("Upload-AppVeyor-Artifacts")
-    .IsDependentOn("Slack");
+    .IsDependentOn("Upload-AppVeyor-Artifacts");
 
 
 
