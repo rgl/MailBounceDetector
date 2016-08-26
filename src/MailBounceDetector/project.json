@@ -30,8 +30,6 @@
 
     "dependencies":
     {
-        "NETStandard.Library": "1.6.0",
-
         "MimeKit": "1.4.2"
     }
 }

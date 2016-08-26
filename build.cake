@@ -91,13 +91,15 @@ Task("Restore-Nuget-Packages")
     .IsDependentOn("Clean")
     .Does(() =>
 {
-    // Restore all NuGet packages.
-    foreach(var solution in solutions)
+    DotNetCoreRestore("./", new DotNetCoreRestoreSettings
     {
-        Information("Restoring {0}", solution);
-
-        NuGetRestore(solution);
-    }
+        Verbose = false,
+        Verbosity = DotNetCoreRestoreVerbosity.Warning,
+        Sources = new [] 
+        {
+            "https://api.nuget.org/v3/index.json",
+        }
+    });
 });
 
 
@@ -128,15 +130,14 @@ Task("Build")
     .IsDependentOn("Patch-Assembly-Info")
     .Does(() =>
 {
-    // Build all solutions.
-    foreach(var solution in solutions)
+    var projects = GetFiles("./**/*.xproj");
+
+    foreach(var project in projects)
     {
-        Information("Building {0}", solution);
-        MSBuild(solution, settings =>
-            settings.SetPlatformTarget(PlatformTarget.MSIL)
-                .WithProperty("TreatWarningsAsErrors","true")
-                .WithTarget("Build")
-                .SetConfiguration(configuration));
+        DotNetCoreBuild(project.GetDirectory().FullPath, new DotNetCoreBuildSettings
+        {
+            Configuration = configuration
+        });
     }
 });
 
