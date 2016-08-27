@@ -12,6 +12,10 @@
         <releaseNotes>Add support for detecting qmail bounces.</releaseNotes>
         <copyright>Copyright 2015 ruilopes.com</copyright>
         <tags>MailKit Bounce</tags>
+       
+       <dependencies>
+           <dependency id="MimeKit" version="1.4.2" />
+       </dependencies>
     </metadata>
 
     <files>
