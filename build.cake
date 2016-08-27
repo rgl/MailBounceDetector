@@ -1,5 +1,3 @@
-#addin "Cake.Slack"
-#tool "xunit.runner.console"
 
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
@@ -114,7 +112,7 @@ Task("Patch-Assembly-Info")
     .IsDependentOn("Restore-Nuget-Packages")
     .Does(() =>
 {
-    var file = "./src/SolutionInfo.cs";
+    var file = "./src/MailBounceDetector/Properties/SolutionInfo.cs";
 
     CreateAssemblyInfo(file, new AssemblyInfoSettings
     {
