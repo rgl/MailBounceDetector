@@ -12,30 +12,17 @@ namespace MailBounceDetector
     // The status codes are described at https://tools.ietf.org/html/rfc3463
     public sealed class BounceDetectResult
     {
-        private readonly BounceStatus _primaryStatus;
-        private readonly BounceStatus _secundaryStatus;
-        private readonly BounceStatus _combinedStatus;
-        private readonly string _reportingMta;
-        private readonly string _remoteMta;
-        private readonly string _finalRecipient;
-        private readonly string[] _diagnosticCodes;
-        private readonly string _action;
-        private readonly MimeEntity _deliveryNotificationPart;
-        private readonly MessageDeliveryStatus _deliveryStatus;
-        private readonly MimeEntity _undeliveredMessagePart;
-        private readonly string _undeliveredMessageId;
-
         private static readonly IDictionary<string, Regex> Matchers = new Dictionary<string, Regex>(StringComparer.InvariantCultureIgnoreCase)
         {
-            ["Final-Recipient"] = r(@"(.+);\s*(.*)"),
-            ["Action"] = r(@"(failed|delayed|delivered|relayed|expanded)"),
-            ["Status"] = r(@"([0-9]+)\.([0-9]+)\.([0-9]+)"),
-            ["Reporting-MTA"] = r(@"(.+);\s*(.*)"),
-            ["Remote-MTA"] = r(@"(.+);\s*(.*)"),
-            ["Diagnostic-Code"] = r(@"(.+);\s*([0-9\-\.]+)?\s*(.*)"),
+            ["Final-Recipient"] = R(@"(.+);\s*(.*)"),
+            ["Action"] = R(@"(failed|delayed|delivered|relayed|expanded)"),
+            ["Status"] = R(@"([0-9]+)\.([0-9]+)\.([0-9]+)"),
+            ["Reporting-MTA"] = R(@"(.+);\s*(.*)"),
+            ["Remote-MTA"] = R(@"(.+);\s*(.*)"),
+            ["Diagnostic-Code"] = R(@"(.+);\s*([0-9\-\.]+)?\s*(.*)"),
         };
 
-        private static Regex r(string regex)
+        private static Regex R(string regex)
         {
             return new Regex(regex, RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Compiled);
         }
@@ -119,7 +106,7 @@ namespace MailBounceDetector
                 { 77, "Message integrity failure" },
             };
 
-        private BounceStatus ParseBounceStatus(string statusCode, IDictionary<int, string> statusCodes)
+        private static BounceStatus ParseBounceStatus(string statusCode, IDictionary<int, string> statusCodes)
         {
             var value = int.Parse(statusCode);
             return new BounceStatus(value, statusCodes[value]);
@@ -155,75 +142,75 @@ namespace MailBounceDetector
             if (headers.ContainsKey("Status"))
             {
                 var status = headers["Status"];
-                _primaryStatus = ParseBounceStatus(status[0], PrimaryStatusCodes);
-                _secundaryStatus = ParseBounceStatus(status[1], SecundaryStatusCodes);
-                _combinedStatus = ParseBounceStatus(string.Join("", status.Skip(1)), CombinedStatusCodes);
+                PrimaryStatus = ParseBounceStatus(status[0], PrimaryStatusCodes);
+                SecundaryStatus = ParseBounceStatus(status[1], SecundaryStatusCodes);
+                CombinedStatus = ParseBounceStatus(string.Join("", status.Skip(1)), CombinedStatusCodes);
             }
 
             if (headers.ContainsKey("Remote-Mta"))
             {
-                _remoteMta = headers["Remote-Mta"][1];
+                RemoteMta = headers["Remote-Mta"][1];
             }
 
             if (headers.ContainsKey("Reporting-Mta"))
             {
-                _reportingMta = headers["Reporting-Mta"][1];
+                ReportingMta = headers["Reporting-Mta"][1];
             }
 
             if (headers.ContainsKey("Final-Recipient"))
             {
-                _finalRecipient = headers["Final-Recipient"][1];
+                FinalRecipient = headers["Final-Recipient"][1];
             }
 
             if (headers.ContainsKey("Diagnostic-Code"))
             {
-                _diagnosticCodes = headers["Diagnostic-Code"].Skip(1).ToArray();
+                DiagnosticCodes = headers["Diagnostic-Code"].Skip(1).ToArray();
             }
 
             if (headers.ContainsKey("Action"))
             {
-                _action = headers["Action"][0];
+                Action = headers["Action"][0];
             }
 
-            _deliveryNotificationPart = deliveryNotification;
-            _deliveryStatus = deliveryStatus;
-            _undeliveredMessagePart = undeliveredMessagePart;
+            DeliveryNotificationPart = deliveryNotification;
+            DeliveryStatus = deliveryStatus;
+            UndeliveredMessagePart = undeliveredMessagePart;
 
             // get the original message id.
-            if (_undeliveredMessagePart != null)
+            if (UndeliveredMessagePart != null)
             {
-                var undeliveredMessage = ((MessagePart)_undeliveredMessagePart).Message;
-                _undeliveredMessageId = undeliveredMessage.MessageId;
+                var undeliveredMessage = ((MessagePart)UndeliveredMessagePart).Message;
+                UndeliveredMessageId = undeliveredMessage.MessageId;
             }
             // try harder. Exchange has In-Reply-To right on the root message. its the undelivered message id.
             else
             {
-                _undeliveredMessageId = message.Headers["In-Reply-To"];
+                UndeliveredMessageId = message.Headers["In-Reply-To"];
             }
         }
 
-        public bool IsBounce { get { return _deliveryStatus != null; } }
-        public bool IsHard { get { return IsBounce && _primaryStatus != null && _primaryStatus.Code > 4; } }
-        public bool IsSoft { get { return IsBounce && _primaryStatus != null && _primaryStatus.Code <= 4; } }
-        public BounceStatus PrimaryStatus { get { return _primaryStatus; } }
-        public BounceStatus SecundaryStatus { get { return _secundaryStatus; } }
-        public BounceStatus CombinedStatus { get { return _combinedStatus; } }
-        public string ReportingMta { get { return _reportingMta; } }
-        public string RemoteMta { get { return _remoteMta; } }
-        public string FinalRecipient { get { return _finalRecipient; } }
-        public string[] DiagnosticCodes { get { return _diagnosticCodes; } }
-        public string Action { get { return _action; } }
+        public bool IsBounce => DeliveryStatus != null;
+        public bool IsHard => IsBounce && PrimaryStatus != null && PrimaryStatus.Code > 4;
+        public bool IsSoft => IsBounce && PrimaryStatus != null && PrimaryStatus.Code <= 4;
+        public BounceStatus PrimaryStatus { get; }
+        public BounceStatus SecundaryStatus { get; }
+        public BounceStatus CombinedStatus { get; }
+        public string ReportingMta { get; }
+        public string RemoteMta { get; }
+        public string FinalRecipient { get; }
+        public string[] DiagnosticCodes { get; }
+        public string Action { get; }
         // normally this is-a TextPart.
-        public MimeEntity DeliveryNotificationPart { get { return _deliveryNotificationPart; } }
-        public MessageDeliveryStatus DeliveryStatus { get { return _deliveryStatus; } }
+        public MimeEntity DeliveryNotificationPart { get; }
+        public MessageDeliveryStatus DeliveryStatus { get; }
         // normally this is-a MessagePart.
-        public MimeEntity UndeliveredMessagePart { get { return _undeliveredMessagePart; } }
-        public string UndeliveredMessageId { get { return _undeliveredMessageId; } }
+        public MimeEntity UndeliveredMessagePart { get; }
+        public string UndeliveredMessageId { get; }
 
         public override string ToString()
         {
-            return _primaryStatus != null
-                ? $"{_primaryStatus.Message}, {_secundaryStatus.Message}, {_combinedStatus.Message}"
+            return PrimaryStatus != null
+                ? $"{PrimaryStatus.Message}, {SecundaryStatus.Message}, {CombinedStatus.Message}"
                 : "Not a bounce message.";
         }
     }

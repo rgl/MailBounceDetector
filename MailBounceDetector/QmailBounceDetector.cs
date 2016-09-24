@@ -36,10 +36,8 @@ namespace MailBounceDetector
 
             var multipart = message.Body as MultipartAlternative;
 
-            if (multipart == null)
-                return null;
-
-            return multipart.OfType<TextPart>()
+            return multipart?
+                .OfType<TextPart>()
                 .Select(p => DetectQmailBounce(message, p))
                 .FirstOrDefault();
         }
@@ -131,10 +129,10 @@ namespace MailBounceDetector
 
             var message = match.Groups[2].Value;
 
-            var status = LinesRegex.Split(message)
+            var status = LinesRegex
+                .Split(message)
                 .Select(ParseStatusLine)
-                .Where(s => s != null)
-                .FirstOrDefault();
+                .FirstOrDefault(s => s != null);
 
             return new FailureParagraph
             {

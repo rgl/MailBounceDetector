@@ -4,21 +4,18 @@ namespace MailBounceDetector
 {
     public sealed class BounceStatus
     {
-        private int _code;
-        private string _message;
-
         public BounceStatus(int code, string message)
         {
-            _code = code;
-            _message = message;
+            Code = code;
+            Message = message;
         }
 
-        public int Code { get { return _code; } }
-        public string Message { get { return _message; } }
+        public int Code { get; }
+        public string Message { get; }
 
         public override string ToString()
         {
-            return $"{_code} {_message}";
+            return $"{Code} {Message}";
         }
     }
 }

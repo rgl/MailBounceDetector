@@ -24,7 +24,7 @@ namespace MailBounceDetector
         ///      Action: failed
         ///      Status: 5.1.1
         ///      Remote-MTA: dns; mx.google.com
-        ///      X-Supplementary-Info: <mx.google.com #5.1.1 smtp;550-5.1.1 The email account
+        ///      X-Supplementary-Info: &lt;mx.google.com #5.1.1 smtp;550-5.1.1 The email account
         ///       that you tried to reach does not exist.Please try 550-5.1.1 double-checking
         ///      the recipient's email address for typos or 550-5.1.1 unnecessary spaces.
         ///       Learn more at 550 5.1.1  https://support.google.com/mail/answer/6596
@@ -63,7 +63,7 @@ namespace MailBounceDetector
 
         private sealed class Visitor : MimeVisitor
         {
-            public VisitorResult Result { get; private set; } = new VisitorResult();
+            public VisitorResult Result { get; } = new VisitorResult();
 
             // called when a multipart/* part is found.
             //
