@@ -50,7 +50,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="LICENSE.md" />
     <None Include="MailBounceDetector.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
