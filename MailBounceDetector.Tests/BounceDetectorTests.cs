@@ -45,6 +45,28 @@ namespace MailBounceDetector.Tests
         }
 
         [Fact]
+        public void ExchangeDelay()
+        {
+            var message = MimeMessage.Load(OpenFixture("bounce_exchange_delay.eml"));
+
+            var result = BounceDetector.Detect(message);
+
+            Assert.True(result.IsBounce);
+            Assert.False(result.IsHard);
+            Assert.True(result.IsSoft);
+            Assert.Equal("4 Persistent Transient Failure", result.PrimaryStatus.ToString());
+            Assert.Equal("4 Network and Routing Status", result.SecundaryStatus.ToString());
+            Assert.Equal("47 Delivery time expired", result.CombinedStatus.ToString());
+            Assert.Null(result.RemoteMta);
+            Assert.Equal("mail.example.com", result.ReportingMta);
+            Assert.Equal("rui.lopes@example.com", result.FinalRecipient);
+            Assert.Equal("<Q8P3DY5EH0U4.ERW6TCCK5TMF3@example.com>", result.UndeliveredMessageId);
+            Assert.NotNull(result.DeliveryStatus);
+            Assert.NotNull(result.DiagnosticCodes);
+            Assert.Equal("delayed", result.Action);
+        }
+
+        [Fact]
         public void PostfixNonExistingMailbox()
         {
             var message = MimeMessage.Load(OpenFixture("bounce_postfix_non_existing_mailbox.eml"));

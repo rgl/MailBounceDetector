@@ -1,0 +1,110 @@
+From: Microsoft Outlook
+	<MicrosoftExchange329e71ec88ae4615bbc36ab6ce41109e@example.com>
+To: <rui.lopes@example.com>
+Date: Tue, 7 Feb 2017 15:34:10 -0500
+Content-Type: multipart/report; report-type=delivery-status;
+	boundary="8e2836eb-d989-4301-a619-8ed4a9d1c790"
+X-MS-Exchange-Organization-SCL: -1
+Content-Language: en-US
+Message-ID: <e800b571-4191-4d94-ab42-f6d340a1685f@mail.example.com>
+In-Reply-To: <Q8P3DY5EH0U4.ERW6TCCK5TMF3@example.com>
+References: <Q8P3DY5EH0U4.ERW6TCCK5TMF3@example.com>
+Subject: Delivery delayed:test
+X-MS-Exchange-Organization-AuthSource: mail.example.com
+X-MS-Exchange-Organization-AuthAs: Internal
+X-MS-Exchange-Organization-AuthMechanism: 05
+MIME-Version: 1.0
+
+--8e2836eb-d989-4301-a619-8ed4a9d1c790
+Content-Type: multipart/alternative; differences=Content-Type;
+	boundary="7a2d16cc-4d93-4390-b2e9-b0296174231b"
+
+--7a2d16cc-4d93-4390-b2e9-b0296174231b
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+
+Delivery is delayed to these recipients or groups:
+
+rui.lopes@example.com<mailto:rui.lopes@example.com>
+
+Subject: test
+
+This message hasn't been delivered yet. Delivery will continue to be attemp=
+ted.
+
+The server will keep trying to deliver this message for the next 1 days, 19=
+ hours and 54 minutes. You'll be notified if the message can't be delivered=
+ by that time.
+
+--7a2d16cc-4d93-4390-b2e9-b0296174231b
+Content-Type: text/html; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+
+<html><head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dus-ascii"=
+></head><body>
+<p><b><font color=3D"#000066" size=3D"3" face=3D"Arial">Delivery is delayed=
+ to these recipients or groups:</font></b></p>
+<font color=3D"#000000" size=3D"2" face=3D"Tahoma"><p><a href=3D"mailto:d5b=
+0b7eb-8ab7-49cc-8ae6-18be5bce78d9@example.com">d5b0b7eb-8ab7-49cc-8ae6-=
+18be5bce78d9@example.com</a></p>
+<p>Subject: test</p>
+<p>This message hasn't been delivered yet. Delivery will continue to be att=
+empted.</p>
+<p>The server will keep trying to deliver this message for the next 1 days,=
+ 19 hours and 54 minutes. You'll be notified if the message can't be delive=
+red by that time.</p>
+</font>
+</body>
+</html>=
+
+--7a2d16cc-4d93-4390-b2e9-b0296174231b--
+
+--8e2836eb-d989-4301-a619-8ed4a9d1c790
+Content-Type: message/delivery-status
+
+Reporting-MTA: dns;mail.example.com
+Received-From-MTA: dns;[127.0.0.1]
+Arrival-Date: Tue, 7 Feb 2017 16:29:10 +0000
+
+Final-Recipient: rfc822;rui.lopes@example.com
+Action: delayed
+Status: 4.4.7
+Diagnostic-Code: smtp;400 4.4.7 Message delayed
+Will-Retry-Until: Thu, 9 Feb 2017 11:29:10 -0500
+
+
+--8e2836eb-d989-4301-a619-8ed4a9d1c790
+Content-Type: text/rfc822-headers
+
+Received: from [127.0.0.1] (127.0.0.1) by mail.example.com
+ (127.0.0.1) with Microsoft SMTP Server (TLS) id 14.3.319.2; Tue, 7 Feb 2017
+ 11:29:10 -0500
+From: Helpdesk <rui.lopes@example.com>
+Date: Tue, 7 Feb 2017 11:29:09 -0500
+Subject: Help Desk: I-8036 - Phone not working
+Message-ID: <Q8P3DY5EH0U4.ERW6TCCK5TMF3@example.com>
+To: <rui.lopes@example.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Return-Path: rui.lopes@example.com
+X-MS-Exchange-Organization-OriginalArrivalTime: 07 Feb 2017 16:29:10.0887
+ (UTC)
+X-MS-Exchange-Forest-ArrivalHubServer: mail.example.com
+X-MS-Exchange-Organization-OriginalClientIPAddress: 127.0.0.1
+X-MS-Exchange-Organization-OriginalServerIPAddress: 127.0.0.1
+X-MS-Exchange-Organization-AuthSource: mail.example.com
+X-MS-Exchange-Organization-AuthAs: Internal
+X-MS-Exchange-Organization-AuthMechanism: 0a
+X-Originating-IP: [127.0.0.1]
+X-MS-Exchange-Organization-MessageDirectionality: Originating
+X-MS-Exchange-Forest-MessageScope: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Organization-MessageScope: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Organization-Cross-Premises-Headers-Processed: mail.example.com
+X-MS-Exchange-Organization-OriginalSize: 343
+X-MS-Exchange-Organization-HygienePolicy: Standard
+X-MS-Exchange-Organization-Recipient-Limit-Verified: True
+X-MS-Exchange-Organization-Processed-By-Journaling: Journal Agent
+X-MS-Exchange-Organization-MessageLatencyInProgress: LSRV=mail.example.com:TOTAL=0;2017-02-07T16:29:10.448Z
+
+--8e2836eb-d989-4301-a619-8ed4a9d1c790--
