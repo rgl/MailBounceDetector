@@ -67,6 +67,29 @@ namespace MailBounceDetector.Tests
         }
 
         [Fact]
+        public void Office365NonExistingMailbox()
+        {
+            var message = MimeMessage.Load(OpenFixture("bounce_office365_non_existing_mailbox.eml"));
+
+            var result = BounceDetector.Detect(message);
+
+            Assert.True(result.IsBounce);
+            Assert.True(result.IsHard);
+            Assert.False(result.IsSoft);
+            Assert.Equal("5 Permanent Failure", result.PrimaryStatus.ToString());
+            Assert.Equal("1 Addressing Status", result.SecundaryStatus.ToString());
+            Assert.Equal("11 Bad destination mailbox address", result.CombinedStatus.ToString());
+            Assert.Null(result.RemoteMta);
+            Assert.Equal("ABCD12EFGH.namprd01.prod.outlook.com", result.ReportingMta);
+            Assert.Equal("rui-lopes@example.com", result.FinalRecipient);
+            Assert.Equal("560418D8.2010303@example.com", result.UndeliveredMessageId);
+            Assert.IsType<TextPart>(result.DeliveryNotificationPart);
+            Assert.NotNull(result.DeliveryStatus);
+            Assert.IsType<MessagePart>(result.UndeliveredMessagePart);
+            Assert.Equal("failed", result.Action);
+        }
+
+        [Fact]
         public void PostfixNonExistingMailbox()
         {
             var message = MimeMessage.Load(OpenFixture("bounce_postfix_non_existing_mailbox.eml"));
@@ -183,6 +206,21 @@ namespace MailBounceDetector.Tests
             Assert.Equal("4.3.2.1", result.DiagnosticCodes[0]);
             Assert.Equal("does not like recipient. Remote host said: 554 5.7.1 <notFound@example.com>: Relay access denied Giving up on 4.3.2.1.", result.DiagnosticCodes[1]);
             Assert.Equal("failed", result.Action);
+        }
+
+        [Fact]
+        public void UnknownStatus()
+        {
+            var message = MimeMessage.Load(OpenFixture("bounce_unknown_status.eml"));
+
+            var result = BounceDetector.Detect(message);
+
+            Assert.True(result.IsBounce);
+            Assert.True(result.IsHard);
+            Assert.False(result.IsSoft);
+            Assert.Equal("5 Permanent Failure", result.PrimaryStatus.ToString());
+            Assert.Equal("0 Other or Undefined Status", result.SecundaryStatus.ToString());
+            Assert.Equal("9 Unknown", result.CombinedStatus.ToString());
         }
 
         private Stream OpenFixture(string name)

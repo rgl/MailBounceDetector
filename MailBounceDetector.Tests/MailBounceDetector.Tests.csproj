@@ -69,6 +69,8 @@
     <EmbeddedResource Include="Fixtures\bounce_qmail_no_host_found.eml" />
     <EmbeddedResource Include="Fixtures\bounce_qmail_extra_lines_between_recipient_paragraphs.eml" />
     <EmbeddedResource Include="Fixtures\bounce_exchange_delay.eml" />
+    <EmbeddedResource Include="Fixtures\bounce_office365_non_existing_mailbox.eml" />
+    <EmbeddedResource Include="Fixtures\bounce_unknown_status.eml" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
