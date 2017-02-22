@@ -106,10 +106,18 @@ namespace MailBounceDetector
                 { 77, "Message integrity failure" },
             };
 
+        private const string UnknownStatus = "Unknown";
+
         private static BounceStatus ParseBounceStatus(string statusCode, IDictionary<int, string> statusCodes)
         {
             var value = int.Parse(statusCode);
-            return new BounceStatus(value, statusCodes[value]);
+            string statusCodeDescription;
+            if (!statusCodes.TryGetValue(value, out statusCodeDescription))
+            {
+                statusCodeDescription = UnknownStatus;
+            }
+
+            return new BounceStatus(value, statusCodeDescription);
         }
 
         public BounceDetectResult(
@@ -144,7 +152,7 @@ namespace MailBounceDetector
                 var status = headers["Status"];
                 PrimaryStatus = ParseBounceStatus(status[0], PrimaryStatusCodes);
                 SecundaryStatus = ParseBounceStatus(status[1], SecundaryStatusCodes);
-                CombinedStatus = ParseBounceStatus(string.Join("", status.Skip(1)), CombinedStatusCodes);
+                CombinedStatus = ParseBounceStatus(string.Join("", status.Skip(1)).Substring(0, 2), CombinedStatusCodes);
             }
 
             if (headers.ContainsKey("Remote-Mta"))
@@ -177,9 +185,10 @@ namespace MailBounceDetector
             UndeliveredMessagePart = undeliveredMessagePart;
 
             // get the original message id.
-            if (UndeliveredMessagePart != null)
+            var messagePart = UndeliveredMessagePart as MessagePart;
+            if (messagePart != null)
             {
-                var undeliveredMessage = ((MessagePart)UndeliveredMessagePart).Message;
+                var undeliveredMessage = messagePart.Message;
                 UndeliveredMessageId = undeliveredMessage.MessageId;
             }
             // try harder. Exchange has In-Reply-To right on the root message. its the undelivered message id.
