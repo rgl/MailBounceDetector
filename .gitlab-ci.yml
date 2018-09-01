@@ -1,0 +1,79 @@
+stages:
+  - build
+  - test
+
+before_script:
+  #
+  # enable strict mode and fail the job when there is an unhandled exception.
+  - |
+    Set-StrictMode -Version Latest
+    $FormatEnumerationLimit = -1
+    $ErrorActionPreference = 'Stop'
+    $ProgressPreference = 'SilentlyContinue'
+    trap {
+      Write-Output "ERROR: $_"
+      Write-Output (($_.ScriptStackTrace -split '\r?\n') -replace '^(.*)$','ERROR: $1')
+      Write-Output (($_.Exception.ToString() -split '\r?\n') -replace '^(.*)$','ERROR EXCEPTION: $1')
+      Exit 1
+    }
+
+build_job:
+  stage: build
+  tags:
+    - vs2017
+  script:
+    - 'MSBuild -m -p:Configuration=Release -t:restore -t:build'
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - '*/bin'
+
+test_job:
+  stage: test
+  tags:
+    - vs2017
+  script:
+    - |
+      # execute unit tests and gather code coverage statistics.
+      dir -Recurse */bin/*.Tests.dll | ForEach-Object {
+        Push-Location $_.Directory
+        Write-Host "Running the unit tests in $($_.Name)..."
+        # NB maybe you should also use -skipautoprops
+        OpenCover.Console.exe `
+          -output:opencover-report.xml `
+          -register:path64 `
+          '-filter:+[*]* -[*.Tests*]* -[*]*.*Config -[xunit.*]*' `
+          '-target:xunit.console.exe' `
+          "-targetargs:$($_.Name) -nologo -noshadow -xml xunit-report.xml"
+        ReportGenerator.exe `
+          -reports:opencover-report.xml `
+          -targetdir:coverage-report
+        Compress-Archive `
+          -CompressionLevel Optimal `
+          -Path coverage-report/* `
+          -DestinationPath coverage-report.zip
+        Pop-Location
+      }
+      # fail the build if there are failed or skipped unit tests.
+      $total = 0; $failed = 0; $skipped = 0
+      Get-ChildItem -Recurse xunit-report.xml | ForEach-Object {
+        $xml = [xml](Get-Content $_.FullName)
+        $xml.SelectNodes('/assemblies/assembly/collection') | ForEach-Object {
+          $total += $_.total
+          $failed += $_.failed
+          $skipped += $_.skipped
+        }
+      }
+      Write-Output "Executed $total tests, $failed failed and $skipped skipped."
+      if ($failed -gt 0 -or $skipped -gt 0) {
+        Write-Output "ERROR: There are failed or skipped tests."
+        Exit 1
+      }
+
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - '*/bin/Release/*/*-report.*' # e.g. MailBounceDetector.Tests/bin/Release/net452/coverage-report.zip
+
+  dependencies:
+    - build_job
