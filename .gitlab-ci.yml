@@ -16,13 +16,31 @@ before_script:
       Write-Output (($_.Exception.ToString() -split '\r?\n') -replace '^(.*)$','ERROR EXCEPTION: $1')
       Exit 1
     }
+    function exec([ScriptBlock]$externalCommand, [string]$stderrPrefix='', [int[]]$successExitCodes=@(0)) {
+      $eap = $ErrorActionPreference
+      $ErrorActionPreference = 'Continue'
+      try {
+        &$externalCommand 2>&1 | ForEach-Object {
+          if ($_ -is [System.Management.Automation.ErrorRecord]) {
+            "$stderrPrefix$_"
+          } else {
+            "$_"
+          }
+        }
+        if ($LASTEXITCODE -notin $successExitCodes) {
+          throw "$externalCommand failed with exit code $LASTEXITCODE"
+        }
+      } finally {
+        $ErrorActionPreference = $eap
+      }
+    }
 
 build_job:
   stage: build
   tags:
     - vs2017
   script:
-    - 'MSBuild -m -p:Configuration=Release -t:restore -t:build'
+    - 'exec {MSBuild -m -p:Configuration=Release -t:restore -t:build}'
   artifacts:
     expire_in: 1 week
     paths:
@@ -38,16 +56,20 @@ test_job:
       dir -Recurse */bin/*.Tests.dll | ForEach-Object {
         Push-Location $_.Directory
         Write-Host "Running the unit tests in $($_.Name)..."
-        # NB maybe you should also use -skipautoprops
-        OpenCover.Console.exe `
-          -output:opencover-report.xml `
-          -register:path64 `
-          '-filter:+[*]* -[*.Tests*]* -[*]*.*Config -[xunit.*]*' `
-          '-target:xunit.console.exe' `
-          "-targetargs:$($_.Name) -nologo -noshadow -xml xunit-report.xml"
-        ReportGenerator.exe `
-          -reports:opencover-report.xml `
-          -targetdir:coverage-report
+        exec {
+          # NB maybe you should also use -skipautoprops
+          OpenCover.Console.exe `
+            -output:opencover-report.xml `
+            -register:path64 `
+            '-filter:+[*]* -[*.Tests*]* -[*]*.*Config -[xunit.*]*' `
+            '-target:xunit.console.exe' `
+            "-targetargs:$($_.Name) -nologo -noshadow -xml xunit-report.xml"
+        }
+        exec {
+          ReportGenerator.exe `
+            -reports:opencover-report.xml `
+            -targetdir:coverage-report
+        }
         Compress-Archive `
           -CompressionLevel Optimal `
           -Path coverage-report/* `
