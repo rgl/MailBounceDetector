@@ -66,6 +66,9 @@ test_job:
             "-targetargs:$($_.Name) -nologo -noshadow -xml xunit-report.xml"
         }
         exec {
+          dotnet xunit-to-junit xunit-report.xml junit-report.xml
+        }
+        exec {
           ReportGenerator.exe `
             -reports:opencover-report.xml `
             -targetdir:coverage-report
@@ -96,6 +99,9 @@ test_job:
     expire_in: 1 week
     paths:
       - '*/bin/Release/*/*-report.*' # e.g. MailBounceDetector.Tests/bin/Release/net452/coverage-report.zip
+    reports:
+      # NB these are displayed on the Merge Request page.
+      junit: '*/bin/Release/*/junit-report.xml'
 
   dependencies:
     - build_job
