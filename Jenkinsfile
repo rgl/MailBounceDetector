@@ -73,7 +73,7 @@ pipeline {
                 // abort it.
                 // see https://github.com/jenkinsci/xunit-plugin/pull/62
                 script {
-                    if (currentBuild.result != 'SUCCESS') {
+                    if (currentBuild.result == 'FAILURE') {
                         error 'Aborting the build due to test failures...'
                     }
                 }
