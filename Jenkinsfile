@@ -86,7 +86,10 @@ pipeline {
         }
         always {
             step $class: 'Mailer',
-                recipients: 'jenkins@example.com',
+                recipients: emailextrecipients([
+                    culprits(),
+                    requestor()
+                ]),
                 notifyEveryUnstableBuild: true,
                 sendToIndividuals: false
         }
