@@ -1,7 +1,7 @@
 // example to use in the https://github.com/rgl/jenkins-vagrant environment.
 pipeline {
     agent {
-        label 'vs2017'
+        label 'vs2019'
     }
     stages {
         stage('Build') {
