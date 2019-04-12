@@ -38,7 +38,7 @@ before_script:
 build_job:
   stage: build
   tags:
-    - vs2017
+    - vs2019
   script:
     - 'exec {MSBuild -m -p:Configuration=Release -t:restore -t:build}'
   artifacts:
@@ -49,7 +49,7 @@ build_job:
 test_job:
   stage: test
   tags:
-    - vs2017
+    - vs2019
   script:
     - |
       # execute unit tests and gather code coverage statistics.
