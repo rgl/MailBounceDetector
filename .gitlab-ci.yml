@@ -2,38 +2,39 @@ stages:
   - build
   - test
 
-before_script:
-  #
-  # enable strict mode and fail the job when there is an unhandled exception.
-  - |
-    Set-StrictMode -Version Latest
-    $FormatEnumerationLimit = -1
-    $ErrorActionPreference = 'Stop'
-    $ProgressPreference = 'SilentlyContinue'
-    trap {
-      Write-Output "ERROR: $_"
-      Write-Output (($_.ScriptStackTrace -split '\r?\n') -replace '^(.*)$','ERROR: $1')
-      Write-Output (($_.Exception.ToString() -split '\r?\n') -replace '^(.*)$','ERROR EXCEPTION: $1')
-      Exit 1
-    }
-    function exec([ScriptBlock]$externalCommand, [string]$stderrPrefix='', [int[]]$successExitCodes=@(0)) {
-      $eap = $ErrorActionPreference
-      $ErrorActionPreference = 'Continue'
-      try {
-        &$externalCommand 2>&1 | ForEach-Object {
-          if ($_ -is [System.Management.Automation.ErrorRecord]) {
-            "$stderrPrefix$_"
-          } else {
-            "$_"
-          }
-        }
-        if ($LASTEXITCODE -notin $successExitCodes) {
-          throw "$externalCommand failed with exit code $LASTEXITCODE"
-        }
-      } finally {
-        $ErrorActionPreference = $eap
+default:
+  before_script:
+    #
+    # enable strict mode and fail the job when there is an unhandled exception.
+    - |
+      Set-StrictMode -Version Latest
+      $FormatEnumerationLimit = -1
+      $ErrorActionPreference = 'Stop'
+      $ProgressPreference = 'SilentlyContinue'
+      trap {
+        Write-Output "ERROR: $_"
+        Write-Output (($_.ScriptStackTrace -split '\r?\n') -replace '^(.*)$','ERROR: $1')
+        Write-Output (($_.Exception.ToString() -split '\r?\n') -replace '^(.*)$','ERROR EXCEPTION: $1')
+        Exit 1
       }
-    }
+      function exec([ScriptBlock]$externalCommand, [string]$stderrPrefix='', [int[]]$successExitCodes=@(0)) {
+        $eap = $ErrorActionPreference
+        $ErrorActionPreference = 'Continue'
+        try {
+          &$externalCommand 2>&1 | ForEach-Object {
+            if ($_ -is [System.Management.Automation.ErrorRecord]) {
+              "$stderrPrefix$_"
+            } else {
+              "$_"
+            }
+          }
+          if ($LASTEXITCODE -notin $successExitCodes) {
+            throw "$externalCommand failed with exit code $LASTEXITCODE"
+          }
+        } finally {
+          $ErrorActionPreference = $eap
+        }
+      }
 
 build_job:
   stage: build
