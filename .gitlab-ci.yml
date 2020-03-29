@@ -97,6 +97,8 @@ test_job:
       }
 
   artifacts:
+    name: test-reports
+    when: always
     expire_in: 1 week
     paths:
       - '*/bin/Release/*/*-report.*' # e.g. MailBounceDetector.Tests/bin/Release/net452/coverage-report.zip
