@@ -1,17 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net452</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <Description>Detects whether a MailKit email Message is a bounce message</Description>
-    <Version>1.0.3</Version>
+    <Version>1.0.4</Version>
     <Company>ruilopes.com</Company>
     <Copyright>Copyright ruilopes.com</Copyright>
-    <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/rgl/MailBounceDetector</PackageProjectUrl>
     <PackageTags>MailKit Bounce</PackageTags>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="MimeKit" Version="1.12.0" />
+    <PackageReference Include="MimeKit" Version="3.0.0" />
   </ItemGroup>
 </Project>

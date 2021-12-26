@@ -1,4 +1,4 @@
-[![Build status](https://ci.appveyor.com/api/projects/status/j9saqv8jxbuuuond?svg=true)](https://ci.appveyor.com/project/rgl/mailbouncedetector)
+[![Build status](https://github.com/rgl/mailbouncedetector/workflows/Build/badge.svg)](https://github.com/rgl/mailbouncedetector/actions?query=workflow%3ABuild)
 
 this library detects whether a message is a [bounce message](https://en.wikipedia.org/wiki/Bounce_message).
 
