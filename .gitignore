@@ -1,6 +1,6 @@
 *.user
 *.nupkg
-bin
-obj
-.vs
-packages
+bin/
+obj/
+TestResults/
+.vs/

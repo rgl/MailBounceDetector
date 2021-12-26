@@ -1,47 +1,15 @@
+# example to use in the https://github.com/rgl/gitlab-ci-vagrant environment.
+
 stages:
   - build
   - test
 
-default:
-  before_script:
-    #
-    # enable strict mode and fail the job when there is an unhandled exception.
-    - |
-      Set-StrictMode -Version Latest
-      $FormatEnumerationLimit = -1
-      $ErrorActionPreference = 'Stop'
-      $ProgressPreference = 'SilentlyContinue'
-      trap {
-        Write-Output "ERROR: $_"
-        Write-Output (($_.ScriptStackTrace -split '\r?\n') -replace '^(.*)$','ERROR: $1')
-        Write-Output (($_.Exception.ToString() -split '\r?\n') -replace '^(.*)$','ERROR EXCEPTION: $1')
-        Exit 1
-      }
-      function exec([ScriptBlock]$externalCommand, [string]$stderrPrefix='', [int[]]$successExitCodes=@(0)) {
-        $eap = $ErrorActionPreference
-        $ErrorActionPreference = 'Continue'
-        try {
-          &$externalCommand 2>&1 | ForEach-Object {
-            if ($_ -is [System.Management.Automation.ErrorRecord]) {
-              "$stderrPrefix$_"
-            } else {
-              "$_"
-            }
-          }
-          if ($LASTEXITCODE -notin $successExitCodes) {
-            throw "$externalCommand failed with exit code $LASTEXITCODE"
-          }
-        } finally {
-          $ErrorActionPreference = $eap
-        }
-      }
-
 build_job:
   stage: build
   tags:
-    - vs2019
+    - vs2022
   script:
-    - 'exec {MSBuild -m -p:Configuration=Release -t:restore -t:build}'
+    - ./build.ps1 build
   artifacts:
     expire_in: 1 week
     paths:
@@ -50,61 +18,19 @@ build_job:
 test_job:
   stage: test
   tags:
-    - vs2019
+    - vs2022
   script:
-    - |
-      # execute unit tests and gather code coverage statistics.
-      dir -Recurse */bin/*.Tests.dll | ForEach-Object {
-        Push-Location $_.Directory
-        Write-Host "Running the unit tests in $($_.Name)..."
-        exec {
-          # NB maybe you should also use -skipautoprops
-          OpenCover.Console.exe `
-            -output:opencover-report.xml `
-            -register:path64 `
-            '-filter:+[*]* -[*.Tests*]* -[*]*.*Config -[xunit.*]*' `
-            '-target:xunit.console.exe' `
-            "-targetargs:$($_.Name) -nologo -noshadow -xml xunit-report.xml"
-        }
-        exec {
-          dotnet xunit-to-junit xunit-report.xml junit-report.xml
-        }
-        exec {
-          ReportGenerator.exe `
-            -reports:opencover-report.xml `
-            -targetdir:coverage-report
-        }
-        Compress-Archive `
-          -CompressionLevel Optimal `
-          -Path coverage-report/* `
-          -DestinationPath coverage-report.zip
-        Pop-Location
-      }
-      # fail the build if there are failed or skipped unit tests.
-      $total = 0; $failed = 0; $skipped = 0
-      Get-ChildItem -Recurse xunit-report.xml | ForEach-Object {
-        $xml = [xml](Get-Content $_.FullName)
-        $xml.SelectNodes('/assemblies/assembly/collection') | ForEach-Object {
-          $total += $_.total
-          $failed += $_.failed
-          $skipped += $_.skipped
-        }
-      }
-      Write-Output "Executed $total tests, $failed failed and $skipped skipped."
-      if ($failed -gt 0 -or $skipped -gt 0) {
-        Write-Output "ERROR: There are failed or skipped tests."
-        Exit 1
-      }
+    - ./build.ps1 test
 
   artifacts:
     name: test-reports
     when: always
     expire_in: 1 week
     paths:
-      - '*/bin/Release/*/*-report.*' # e.g. MailBounceDetector.Tests/bin/Release/net452/coverage-report.zip
+      - '*/TestResults/*-report.*'
     reports:
-      # NB these are displayed on the Merge Request page.
-      junit: '*/bin/Release/*/junit-report.xml'
+      # NB these are displayed in the Pipeline (Tests tab) and Merge Request pages.
+      junit: '*/TestResults/TestResults.xml'
 
   dependencies:
     - build_job
