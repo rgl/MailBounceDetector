@@ -1,13 +1,18 @@
 # example to use in the https://github.com/rgl/gitlab-ci-vagrant environment.
 
-stages:
-  - build
-  - test
+# XXX matrix support in gitlab-runner is somewhat lacking a way to create independent flows.
+#     see https://gitlab.com/gitlab-org/gitlab/-/issues/254821
 
-build_job:
-  stage: build
+.matrix:
   tags:
-    - vs2022
+    - ${TAG}
+    - shell
+  parallel:
+    matrix:
+      - TAG: [windows, linux]
+
+build:
+  extends: .matrix
   script:
     - ./build.ps1 build
   artifacts:
@@ -15,13 +20,10 @@ build_job:
     paths:
       - '*/bin'
 
-test_job:
-  stage: test
-  tags:
-    - vs2022
+test:
+  extends: .matrix
   script:
     - ./build.ps1 test
-
   artifacts:
     name: test-reports
     when: always
@@ -31,6 +33,5 @@ test_job:
     reports:
       # NB these are displayed in the Pipeline (Tests tab) and Merge Request pages.
       junit: '*/TestResults/TestResults.xml'
-
-  dependencies:
-    - build_job
+  needs:
+    - build

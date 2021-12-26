@@ -1,3 +1,5 @@
+#!/usr/bin/pwsh
+
 param(
     [Parameter(Mandatory=$true)]
     [string]$stage
