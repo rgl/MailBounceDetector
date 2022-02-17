@@ -12,7 +12,7 @@ pipeline {
         stage('Test') {
             steps {
                 powershell './build.ps1 test'
-                xunit tools: [junit(pattern: '**/TestResults.xml')],
+                xunit tools: [JUnit(pattern: '**/TestResults.xml')],
                     thresholds: [skipped(failureThreshold: '0'), failed(failureThreshold: '0')],
                     thresholdMode: 1,
                     testTimeMargin: '3000'
