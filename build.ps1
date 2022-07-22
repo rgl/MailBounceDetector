@@ -33,6 +33,21 @@ function exec([ScriptBlock]$externalCommand, [string]$stderrPrefix='', [int[]]$s
     }
 }
 
+function Get-SbomTool {
+    $version = '0.1.4'
+    $url = "https://github.com/microsoft/sbom-tool/releases/download/v$version/sbom-tool-win-x64.exe"
+    $exe = 'bin\sbom-tool.exe'
+    if (Test-Path $exe) {
+        $actualVersion = (Get-ChildItem $exe).VersionInfo.ProductVersion
+        if ($actualVersion -eq $version) {
+            return
+        }
+    }
+    Write-Host "Downloading $url..."
+    mkdir -force bin | Out-Null
+    (New-Object Net.WebClient).DownloadFile($url, $exe)
+}
+
 function Invoke-StageDependencies {
     exec {
         dotnet tool restore
@@ -40,11 +55,32 @@ function Invoke-StageDependencies {
     exec {
         dotnet restore
     }
+    Get-SbomTool
 }
 
 function Invoke-StageBuild {
     exec {
         dotnet build --no-restore --configuration Release
+    }
+    exec {
+        $packageName = 'MailBounceDetector'
+        $packagePath = Resolve-Path "$packageName/bin/Release/net6.0"
+        $packageVersion = (Get-ChildItem "$packagePath/$packageName.dll").VersionInfo.ProductVersion
+        $manifestPath = "$packagePath/_manifest"
+        Remove-Item -Recurse -Force $manifestPath,$packagePath/../*.spdx.*
+        mkdir $manifestPath | Out-Null
+        .\bin\sbom-tool `
+            generate `
+            -ManifestDirPath $manifestPath `
+            -BuildDropPath $packagePath `
+            -BuildComponentPath $packageName `
+            -PackageName $packageName `
+            -PackageVersion $packageVersion `
+            -NamespaceUriBase https://sbom.test.ruilopes.com/dotnet
+        Get-ChildItem -Recurse -Include manifest.spdx.json $packagePath | ForEach-Object {
+            Move-Item $_ "$packagePath/../$packageName.$packageVersion.spdx.json"
+            Move-Item "$_.sha256" "$packagePath/../$packageName.$packageVersion.spdx.json.sha256"
+        }
     }
 }
 
