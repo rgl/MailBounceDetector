@@ -8,9 +8,9 @@ $FormatEnumerationLimit = -1
 $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'
 trap {
-    Write-Output "ERROR: $_"
-    Write-Output (($_.ScriptStackTrace -split '\r?\n') -replace '^(.*)$','ERROR: $1')
-    Write-Output (($_.Exception.ToString() -split '\r?\n') -replace '^(.*)$','ERROR EXCEPTION: $1')
+    "ERROR: $_" | Write-Host
+    ($_.ScriptStackTrace -split '\r?\n') -replace '^(.*)$','ERROR: $1' | Write-Host
+    ($_.Exception.ToString() -split '\r?\n') -replace '^(.*)$','ERROR EXCEPTION: $1' | Write-Host
     Exit 1
 }
 
@@ -30,6 +30,12 @@ function exec([ScriptBlock]$externalCommand, [string]$stderrPrefix='', [int[]]$s
         }
     } finally {
         $ErrorActionPreference = $eap
+    }
+}
+
+function Invoke-StageDependencies {
+    exec {
+        dotnet tool restore
     }
 }
 
@@ -57,7 +63,7 @@ function Invoke-StageTest {
         Push-Location $_.Directory
         Write-Host "Running the unit tests in $($_.Name)..."
         exec {
-            reportgenerator `
+            dotnet tool run reportgenerator `
                 "-reports:$(Resolve-Path */coverage.opencover.xml)" `
                 -targetdir:coverage-report
         }
