@@ -4,20 +4,20 @@ jobs:
   build:
     runs-on: windows-2022
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Setup .NET Core SDK
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: '6.0.101'
+          dotnet-version: '6.0.302'
       - name: Install dependencies
         run: |
-          dotnet tool install --global dotnet-reportgenerator-globaltool --version 5.0.0
+          dotnet tool install --global dotnet-reportgenerator-globaltool --version 5.1.9
       - name: Build
         run: ./build.ps1 build
       - name: Test
         run: ./build.ps1 test
       - name: Upload Artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: Artifacts
           path: |
