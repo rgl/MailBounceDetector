@@ -54,6 +54,7 @@ function Invoke-StageTest {
     # see https://github.com/coverlet-coverage/coverlet/blob/master/Documentation/VSTestIntegration.md
     exec {
         dotnet test `
+            --no-build `
             --configuration Release `
             --test-adapter-path . `
             --logger 'junit;MethodFormat=Class;FailureBodyFormat=Verbose' `
