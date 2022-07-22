@@ -37,6 +37,9 @@ function Invoke-StageDependencies {
     exec {
         dotnet tool restore
     }
+    exec {
+        dotnet restore
+    }
 }
 
 function Invoke-StageBuild {
