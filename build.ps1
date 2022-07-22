@@ -44,7 +44,7 @@ function Invoke-StageDependencies {
 
 function Invoke-StageBuild {
     exec {
-        dotnet build --configuration Release
+        dotnet build --no-restore --configuration Release
     }
 }
 
