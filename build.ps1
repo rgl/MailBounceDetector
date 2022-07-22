@@ -46,6 +46,16 @@ function Invoke-StageBuild {
     exec {
         dotnet build --no-restore --configuration Release
     }
+    exec {
+        dotnet tool run dotnet-CycloneDX `
+            --json `
+            --recursive `
+            --exclude-dev `
+            --exclude-test-projects `
+            --disable-package-restore `
+            --out MailBounceDetector/bin/Release `
+            MailBounceDetector/MailBounceDetector.csproj
+    }
 }
 
 function Invoke-StageTest {
