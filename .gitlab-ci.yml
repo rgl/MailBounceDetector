@@ -9,6 +9,7 @@ build_job:
   tags:
     - vs2022
   script:
+    - ./build.ps1 dependencies
     - ./build.ps1 build
   artifacts:
     expire_in: 1 week
