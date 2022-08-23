@@ -34,7 +34,7 @@ function exec([ScriptBlock]$externalCommand, [string]$stderrPrefix='', [int[]]$s
 }
 
 function Get-SbomTool {
-    $version = '0.1.4'
+    $version = '0.1.13'
     $url = "https://github.com/microsoft/sbom-tool/releases/download/v$version/sbom-tool-win-x64.exe"
     $exe = 'bin\sbom-tool.exe'
     if (Test-Path $exe) {
