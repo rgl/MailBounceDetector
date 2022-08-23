@@ -4,6 +4,11 @@ pipeline {
         label 'vs2022'
     }
     stages {
+        stage('Dependencies') {
+            steps {
+                powershell './build.ps1 dependencies'
+            }
+        }
         stage('Build') {
             steps {
                 powershell './build.ps1 build'

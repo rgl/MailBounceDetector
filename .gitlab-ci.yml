@@ -1,27 +1,23 @@
 # example to use in the https://github.com/rgl/gitlab-ci-vagrant environment.
 
-stages:
-  - build
-  - test
-
-build_job:
-  stage: build
+build:
   tags:
     - vs2022
   script:
+    - ./build.ps1 dependencies
     - ./build.ps1 build
   artifacts:
     expire_in: 1 week
     paths:
       - '*/bin'
 
-test_job:
-  stage: test
+test:
   tags:
     - vs2022
+  needs:
+    - build
   script:
     - ./build.ps1 test
-
   artifacts:
     name: test-reports
     when: always
@@ -31,6 +27,3 @@ test_job:
     reports:
       # NB these are displayed in the Pipeline (Tests tab) and Merge Request pages.
       junit: '*/TestResults/TestResults.xml'
-
-  dependencies:
-    - build_job
