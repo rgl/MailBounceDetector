@@ -34,9 +34,9 @@ function exec([ScriptBlock]$externalCommand, [string]$stderrPrefix='', [int[]]$s
 }
 
 function Get-SbomTool {
-    $version = '0.1.13'
+    $version = '0.2.6'
     $url = "https://github.com/microsoft/sbom-tool/releases/download/v$version/sbom-tool-win-x64.exe"
-    $exe = 'bin\sbom-tool.exe'
+    $exe = "$PWD\bin\sbom-tool.exe"
     if (Test-Path $exe) {
         $actualVersion = (Get-ChildItem $exe).VersionInfo.ProductVersion
         if ($actualVersion -eq $version) {
@@ -76,6 +76,7 @@ function Invoke-StageBuild {
             -BuildComponentPath $packageName `
             -PackageName $packageName `
             -PackageVersion $packageVersion `
+            -PackageSupplier test.ruilopes.com `
             -NamespaceUriBase https://sbom.test.ruilopes.com/dotnet
         Get-ChildItem -Recurse -Include manifest.spdx.json $packagePath | ForEach-Object {
             Move-Item $_ "$packagePath/../$packageName.$packageVersion.spdx.json"
