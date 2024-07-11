@@ -12,6 +12,6 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="MimeKit" Version="3.3.0" />
+    <PackageReference Include="MimeKit" Version="4.7.1" />
   </ItemGroup>
 </Project>
