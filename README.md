@@ -1,12 +1,15 @@
 # MailBounceDetector
 
 [![Build status](https://github.com/rgl/mailbouncedetector/workflows/Build/badge.svg)](https://github.com/rgl/mailbouncedetector/actions?query=workflow%3ABuild)
+[![NuGet Version](https://img.shields.io/nuget/v/MailBounceDetector)](https://www.nuget.org/packages/MailBounceDetector)
 
 this library detects whether a message is a [bounce message](https://en.wikipedia.org/wiki/Bounce_message).
 
 this detects [standard](#standard-bounce-messages) and [qmail](#qmail-bounce-messages) bounce messages.
 
 see the [unit tests](MailBounceDetector.Tests/BounceDetectorTests.cs) for an example on how that information is exposed by the library.
+
+It is published o Nuget.org as [`MailBounceDetector`](https://www.nuget.org/packages/MailBounceDetector).
 
 ## Standard bounce messages
 
@@ -18,7 +21,7 @@ a bounce message is one that has (or is) a `multipart/report; report-type=delive
 
 the most important part is the `message/delivery-status` part; it looks something like:
 
-```plain
+```eml
 Content-Type: message/delivery-status
 
 Reporting-MTA: dns; PTPEDGE02.test.local
@@ -45,7 +48,7 @@ the recipient's email address for typos or 550-5.1.1 unnecessary spaces.
 
 a bounce message is one that is a `text/plain` (which can also be inside a `multipart/alternative`) MIME part, e.g.:
 
- ```plain
+ ```eml
 Date: 17 Mar 1996 03:54:40 -0000
 From: MAILER-DAEMON@silverton.berkeley.edu
 To: djb@silverton.berkeley.edu
