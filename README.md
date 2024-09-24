@@ -8,6 +8,8 @@ this detects [standard](#standard-bounce-messages) and [qmail](#qmail-bounce-mes
 
 see the [unit tests](MailBounceDetector.Tests/BounceDetectorTests.cs) for an example on how that information is exposed by the library.
 
+It is published o Nuget.org as [`MailBounceDetector`](https://www.nuget.org/packages/MailBounceDetector).
+
 ## Standard bounce messages
 
 a bounce message is one that has (or is) a `multipart/report; report-type=delivery-status` MIME part. its comprised of two or three sub-parts:
