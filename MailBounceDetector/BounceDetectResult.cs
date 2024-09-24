@@ -192,6 +192,7 @@ namespace MailBounceDetector
         public bool IsBounce => DeliveryStatus != null;
         public bool IsHard => IsBounce && PrimaryStatus != null && PrimaryStatus.Code > 4;
         public bool IsSoft => IsBounce && PrimaryStatus != null && PrimaryStatus.Code <= 4;
+        public bool IsSuccess => IsBounce && PrimaryStatus == 4;
         public BounceStatus PrimaryStatus { get; }
         public BounceStatus SecundaryStatus { get; }
         public BounceStatus CombinedStatus { get; }
