@@ -1,6 +1,7 @@
 # MailBounceDetector
 
 [![Build status](https://github.com/rgl/mailbouncedetector/workflows/Build/badge.svg)](https://github.com/rgl/mailbouncedetector/actions?query=workflow%3ABuild)
+[![NuGet Version](https://img.shields.io/nuget/v/MailBounceDetector)](https://www.nuget.org/packages/MailBounceDetector)
 
 this library detects whether a message is a [bounce message](https://en.wikipedia.org/wiki/Bounce_message).
 
