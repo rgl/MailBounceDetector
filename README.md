@@ -1,6 +1,6 @@
 # MailBounceDetector
 
-[![Build status](https://github.com/rgl/mailbouncedetector/workflows/Build/badge.svg)](https://github.com/rgl/mailbouncedetector/actions?query=workflow%3ABuild)
+[![Build status](https://github.com/rgl/MailBounceDetector/actions/workflows/build.yml/badge.svg)](https://github.com/rgl/MailBounceDetector/actions/workflows/build.yml)
 
 this library detects whether a message is a [bounce message](https://en.wikipedia.org/wiki/Bounce_message).
 
