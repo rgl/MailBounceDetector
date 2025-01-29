@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Description>Detects whether a MailKit email Message is a bounce message</Description>
     <Version>1.0.4</Version>
     <Company>ruilopes.com</Company>
@@ -12,6 +12,6 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="MimeKit" Version="3.3.0" />
+    <PackageReference Include="MimeKit" Version="4.7.1" />
   </ItemGroup>
 </Project>
