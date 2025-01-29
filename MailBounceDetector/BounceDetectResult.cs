@@ -36,7 +36,7 @@ namespace MailBounceDetector
                 { 5, "Permanent Failure" },
             };
 
-        private static readonly IDictionary<int, string> SecundaryStatusCodes = new Dictionary<int, string>
+        private static readonly IDictionary<int, string> SecondaryStatusCodes = new Dictionary<int, string>
             {
                 { 0, "Other or Undefined Status" },
                 { 1, "Addressing Status" },
@@ -143,7 +143,7 @@ namespace MailBounceDetector
             {
                 var status = headers["Status"];
                 PrimaryStatus = ParseBounceStatus(status[0], PrimaryStatusCodes);
-                SecundaryStatus = ParseBounceStatus(status[1], SecundaryStatusCodes);
+                SecondaryStatus = ParseBounceStatus(status[1], SecondaryStatusCodes);
                 CombinedStatus = ParseBounceStatus(string.Join("", status.Skip(1)), CombinedStatusCodes);
             }
 
@@ -193,7 +193,7 @@ namespace MailBounceDetector
         public bool IsHard => IsBounce && PrimaryStatus != null && PrimaryStatus.Code > 4;
         public bool IsSoft => IsBounce && PrimaryStatus != null && PrimaryStatus.Code <= 4;
         public BounceStatus PrimaryStatus { get; }
-        public BounceStatus SecundaryStatus { get; }
+        public BounceStatus SecondaryStatus { get; }
         public BounceStatus CombinedStatus { get; }
         public string ReportingMta { get; }
         public string RemoteMta { get; }
@@ -210,7 +210,7 @@ namespace MailBounceDetector
         public override string ToString()
         {
             return PrimaryStatus != null
-                ? $"{PrimaryStatus.Message}, {SecundaryStatus.Message}, {CombinedStatus.Message}"
+                ? $"{PrimaryStatus.Message}, {SecondaryStatus.Message}, {CombinedStatus.Message}"
                 : "Not a bounce message.";
         }
     }
