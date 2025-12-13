@@ -2,7 +2,7 @@
 
 build:
   tags:
-    - vs2022
+    - vs2026
   script:
     - ./build.ps1 dependencies
     - ./build.ps1 build
@@ -14,7 +14,7 @@ build:
 
 test:
   tags:
-    - vs2022
+    - vs2026
   needs:
     - build
   script:
