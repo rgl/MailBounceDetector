@@ -177,7 +177,7 @@ namespace MailBounceDetector
             UndeliveredMessagePart = undeliveredMessagePart;
 
             // get the original message id.
-            if (UndeliveredMessagePart != null)
+            if (UndeliveredMessagePart != null && typeof(MessagePart).IsAssignableFrom (UndeliveredMessagePart.GetType()))
             {
                 var undeliveredMessage = ((MessagePart)UndeliveredMessagePart).Message;
                 UndeliveredMessageId = undeliveredMessage.MessageId;
