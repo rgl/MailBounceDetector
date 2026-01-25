@@ -31,7 +31,7 @@ namespace MailBounceDetector.Tests
             Assert.True(result.IsHard);
             Assert.False(result.IsSoft);
             Assert.Equal("5 Permanent Failure", result.PrimaryStatus.ToString());
-            Assert.Equal("1 Addressing Status", result.SecundaryStatus.ToString());
+            Assert.Equal("1 Addressing Status", result.SecondaryStatus.ToString());
             Assert.Equal("11 Bad destination mailbox address", result.CombinedStatus.ToString());
             Assert.Equal("mx.google.com", result.RemoteMta);
             Assert.Equal("test.local", result.ReportingMta);
@@ -55,7 +55,7 @@ namespace MailBounceDetector.Tests
             Assert.True(result.IsHard);
             Assert.False(result.IsSoft);
             Assert.Equal("5 Permanent Failure", result.PrimaryStatus.ToString());
-            Assert.Equal("1 Addressing Status", result.SecundaryStatus.ToString());
+            Assert.Equal("1 Addressing Status", result.SecondaryStatus.ToString());
             Assert.Equal("11 Bad destination mailbox address", result.CombinedStatus.ToString());
             Assert.Null(result.RemoteMta);
             Assert.Equal("test.local", result.ReportingMta);
@@ -82,7 +82,7 @@ namespace MailBounceDetector.Tests
             Assert.True(result.IsHard);
             Assert.False(result.IsSoft);
             Assert.Equal("5 Permanent Failure", result.PrimaryStatus.ToString());
-            Assert.Equal("3 Mail System Status", result.SecundaryStatus.ToString());
+            Assert.Equal("3 Mail System Status", result.SecondaryStatus.ToString());
             Assert.Equal("30 Other or undefined mail system status", result.CombinedStatus.ToString());
             Assert.Null(result.RemoteMta);
             Assert.Equal("silverton.berkeley.edu", result.ReportingMta);
@@ -109,7 +109,7 @@ namespace MailBounceDetector.Tests
             Assert.True(result.IsHard);
             Assert.False(result.IsSoft);
             Assert.Equal("5 Permanent Failure", result.PrimaryStatus.ToString());
-            Assert.Equal("3 Mail System Status", result.SecundaryStatus.ToString());
+            Assert.Equal("3 Mail System Status", result.SecondaryStatus.ToString());
             Assert.Equal("30 Other or undefined mail system status", result.CombinedStatus.ToString());
             Assert.Null(result.RemoteMta);
             Assert.Equal("example.com", result.ReportingMta);
@@ -147,7 +147,7 @@ namespace MailBounceDetector.Tests
             Assert.True(result.IsHard);
             Assert.False(result.IsSoft);
             Assert.Equal("5 Permanent Failure", result.PrimaryStatus.ToString());
-            Assert.Equal("7 Security or Policy Status", result.SecundaryStatus.ToString());
+            Assert.Equal("7 Security or Policy Status", result.SecondaryStatus.ToString());
             Assert.Equal("71 Delivery not authorized, message refused", result.CombinedStatus.ToString());
             Assert.Null(result.RemoteMta);
             Assert.Equal("mgm-smtp.example.com", result.ReportingMta);
